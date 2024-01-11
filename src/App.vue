@@ -1,9 +1,9 @@
 <script setup>
-  import { ref } from "vue";
+  import {reactive, ref} from "vue";
   import { useVuelidate } from '@vuelidate/core';
   import { required } from "@vuelidate/validators";
   import {useStore} from "vuex";
-  import XLSX from 'xlsx'
+  // import XLSX from 'xlsx'
 
   import Button from "primevue/button";
   import Sidebar from "primevue/sidebar";
@@ -12,16 +12,12 @@
   import InputNumber from "primevue/inputnumber";
   import Dropdown from "primevue/dropdown";
   import Textarea from "primevue/textarea";
-  import FileUpload from "primevue/fileupload";
+  // import FileUpload from "primevue/fileupload";
 
 
   // ref - для переменных
   // reactive - для объектов которые не перезаписываються
   const store = useStore()
-  const isShow = ref(false)
-  const data = ref(JSON.parse(localStorage.getItem('data') || '[]'))
-  store.commit('setData', data.value)
-
   const defaultModel = {
     date: null,
     place: null,
@@ -30,6 +26,10 @@
     card: null,
     description: null
   }
+
+  const data = reactive(JSON.parse(localStorage.getItem('operations') || '[]'))
+  store.commit('setData', data)
+  const isShow = ref(false)
   const model = ref({...defaultModel})
 
   const rule = {
@@ -55,34 +55,34 @@
       return
     }
     v$.value.$reset()
-    data.value.push(model.value)
+    data.push(model.value)
     model.value = {...defaultModel}
     store.commit('setData', data)
-    localStorage.setItem('data', JSON.stringify(data))
+    localStorage.setItem('operations', JSON.stringify(data))
   }
-  const parseCSV = (e) => {
-    const reader = new FileReader()
-    reader.onload = function(e) {
-      const source = e.target.result
-      const readedData = XLSX.read(source, { type: 'binary', codepage: 1251, cellDates: true })
-      const wsname = readedData.SheetNames[0]
-      const ws = readedData.Sheets[wsname]
-      const dataParse = XLSX.utils.sheet_to_json(ws, {header: 0, defval: null})
-      const dateArray = dataParse.map(item => {
-        return {
-          date: item['Дата операции'],
-          amount: item['Сумма операции'],
-          card: item['Номер карты'],
-          category: item['Категория'],
-          place: item['Описание'],
-        }
-      })
-      data.value = dateArray
-      store.commit('setData', dateArray)
-      localStorage.setItem('data', JSON.stringify(dateArray))
-    }
-    reader.readAsBinaryString(e.files[0])
-  }
+  // const parseCSV = (e) => {
+  //   const reader = new FileReader()
+  //   reader.onload = function(e) {
+  //     const source = e.target.result
+  //     const readedData = XLSX.read(source, { type: 'binary', codepage: 1251, cellDates: true })
+  //     const wsname = readedData.SheetNames[0]
+  //     const ws = readedData.Sheets[wsname]
+  //     const dataParse = XLSX.utils.sheet_to_json(ws, {header: 0, defval: null})
+  //     const dateArray = dataParse.map(item => {
+  //       return {
+  //         date: item['Дата операции'],
+  //         amount: item['Сумма операции'],
+  //         card: item['Номер карты'],
+  //         category: item['Категория'],
+  //         place: item['Описание'],
+  //       }
+  //     })
+  //     data.value = dateArray
+  //     store.commit('setData', dateArray)
+  //     localStorage.setItem('data', JSON.stringify(dateArray))
+  //   }
+  //   reader.readAsBinaryString(e.files[0])
+  // }
 
 </script>
 
@@ -175,7 +175,7 @@
       </div>
       <Button label="Send operation" type="submit" class="bg-teal-500"></Button>
     </form>
-    <FileUpload mode="basic" name="file[]" :custom-upload="true" @uploader="parseCSV" class="mt-3 bg-teal-500"/>
+<!--    <FileUpload mode="basic" name="file[]" :custom-upload="true" @uploader="parseCSV" class="mt-3 bg-teal-500"/>-->
   </Sidebar>
 </template>
 
