@@ -5,7 +5,14 @@
   import dateFormat from "dateformat";
 
   const store = useStore()
-  const data = store.state.operations.data
+
+  const data = store.state.operations.data //store - экземпляр, state - объект Stora,
+  const getterData = store.getters.getData // ПРОБЛЕМА - если я использую эту функцию в конкретном файле, то в остальных я использовать её не смогу - возвратит 0
+  const getterDataNew = store.getters.operations_getData // из-за того что мы добавили operations namespaced: true, всё работает коректно, обязательно нужно добавлять название модуля
+  console.log('Data: ', data)
+  console.log('getterData: ', getterData)
+  console.log('getterDataNew: ', getterDataNew)
+
 </script>
 
 <template>

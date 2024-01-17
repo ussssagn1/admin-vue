@@ -8,8 +8,14 @@ html {
   font-size: 14px;
 
 }
+
 a:is([class]) {
   text-decoration: none;
+  font-weight: bold;
+
+}
+a {
+  color: #fff;
 }
 ._container {
   max-width: 1440px;

@@ -26,8 +26,8 @@
     card: null,
     description: null
   }
-
   const data = reactive(JSON.parse(localStorage.getItem('operations') || '[]'))
+
   store.commit('setData', data)
   const isShow = ref(false)
   const model = ref({...defaultModel})
@@ -94,8 +94,8 @@
         <img class="w-2 h-2" src="/v-logo.svg" alt="">
       </router-link>
       <div class="flex gap-8 align-items-center">
-        <router-link :to="{ name: 'Dashboard' }" class="text-black-alpha-90 text-lg  text-white font-bold">Dashboard</router-link>
-        <router-link :to="{ name: 'Operations' }" class="text-black-alpha-90 text-lg  text-white font-bold">Operations</router-link>
+        <router-link :to="{ name: 'Dashboard' }" :active-class="$style.active" class="text-lg font-bold">Dashboard</router-link>
+        <router-link :to="{ name: 'Operations' }" :active-class="$style.active" class="text-lg font-bold">Operations</router-link>
         <Button class="p-3 bg-teal-800 hover:bg-black-alpha-20 text-white" label="Add operation" @click="isShow = !isShow"/>
       </div>
     </div>
@@ -182,5 +182,8 @@
 <style lang="scss" module>
   .header {
     position: relative;
+  }
+  .active {
+    color: #50e19b;
   }
 </style>
