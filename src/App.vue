@@ -28,7 +28,9 @@
   }
   const data = reactive(JSON.parse(localStorage.getItem('operations') || '[]'))
 
-  store.commit('setData', data)
+  setTimeout(() => {
+    store.commit('setData', data)
+  }, 600)
   const isShow = ref(false)
   const model = ref({...defaultModel})
 

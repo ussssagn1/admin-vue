@@ -1,38 +1,39 @@
 <script setup>
 import {useStore} from 'vuex'
 import Chart from "primevue/chart";
-import {computed, reactive } from "vue";
+import {computed, reactive, ref, watch} from "vue";
 
 const store = useStore()
+const data = computed(() => store.state.operations.data)
+const result = ref(0)
 const state = reactive({
-  income: null,
-  consuption: null
+  income: 0,
+  consuption: 0
 })
 
-const data = computed(() => {
-  const income = store.state.operations.data.filter(({ amount }) => amount > 0)     // в общем, создаються массив объектов, в котором income - числа больше нуля,
+watch(data, (newValue) => {
+  const income = newValue.filter(({ amount }) => amount > 0)     // в общем, создаються массив объектов, в котором income - числа больше нуля,
   income.forEach(e => {
     state.income += e.amount
   })
-  const consuption = store.state.operations.data.filter(({ amount }) => amount < 0) // а consuption - меньше
+  const consuption = newValue.filter(({ amount }) => amount < 0) // а consuption - меньше
   consuption.forEach(e => {
     state.consuption += e.amount
   })
-  return [income, consuption]
+  result.value = new Intl.NumberFormat('eu-US').format(state.income - state.consuption)
 })
-console.log(data.value)
-console.log(state)
 
-const chartData = {
+
+const chartData = reactive({
   labels: ['Income ', 'Expense'],
   datasets: [
     {
-      data: [state.income, state.consuption],
+      data: [computed(() => state.income), computed(() => state.consuption)],
       backgroundColor: ['#2DB370', '#73D8FF']
     }
   ]
-}
-const lightOptions = {
+})
+const lightOptions = reactive({
   plugins: {
     legend: {
       labels: {
@@ -40,14 +41,16 @@ const lightOptions = {
       }
     }
   }
-}
+})
 
 </script>
 
 <template>
   <div>
-    <Chart :class="$style.chart" type="doughnut" :data="chartData" :options="lightOptions"/>
-    {{ state.income + state.consuption}}
+    <div :class="$style.chart">
+      <Chart  type="doughnut" :data="chartData" :options="lightOptions"/>
+      {{ result }}
+    </div>
   </div>
 </template>
 
