@@ -1,7 +1,7 @@
 <script setup>
 import {useStore} from 'vuex'
 import Chart from "primevue/chart";
-import {computed, reactive, ref, watch} from "vue";
+import {computed, onMounted, reactive, ref, watch} from "vue";
 
 const store = useStore()
 const data = computed(() => store.state.operations.data)
@@ -11,17 +11,23 @@ const state = reactive({
   consuption: 0
 })
 
-watch(data, (newValue) => {
-  const income = newValue.filter(({ amount }) => amount > 0)     // в общем, создаються массив объектов, в котором income - числа больше нуля,
-  income.forEach(e => {
-    state.income += e.amount
-  })
-  const consuption = newValue.filter(({ amount }) => amount < 0) // а consuption - меньше
-  consuption.forEach(e => {
-    state.consuption += e.amount
-  })
-  result.value = new Intl.NumberFormat('eu-US').format(state.income - state.consuption)
+function loadingData (newValue) {
+  if(newValue.length) {
+    const income = newValue.filter(({ amount }) => amount > 0)     // в общем, создаються массив объектов, в котором income - числа больше нуля,
+    income.forEach(e => {
+      state.income += e.amount
+    })
+    const consuption = newValue.filter(({ amount }) => amount < 0) // а consuption - меньше
+    consuption.forEach(e => {
+      state.consuption += e.amount
+    })
+    result.value = new Intl.NumberFormat('eu-US').format(state.income - state.consuption)
+  }
+}
+onMounted(() => {
+  loadingData(data.value)
 })
+
 
 
 const chartData = reactive({
