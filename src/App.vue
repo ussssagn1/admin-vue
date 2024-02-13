@@ -62,29 +62,6 @@
     store.commit('setData', data)
     localStorage.setItem('operations', JSON.stringify(data))
   }
-  // const parseCSV = (e) => {
-  //   const reader = new FileReader()
-  //   reader.onload = function(e) {
-  //     const source = e.target.result
-  //     const readedData = XLSX.read(source, { type: 'binary', codepage: 1251, cellDates: true })
-  //     const wsname = readedData.SheetNames[0]
-  //     const ws = readedData.Sheets[wsname]
-  //     const dataParse = XLSX.utils.sheet_to_json(ws, {header: 0, defval: null})
-  //     const dateArray = dataParse.map(item => {
-  //       return {
-  //         date: item['Дата операции'],
-  //         amount: item['Сумма операции'],
-  //         card: item['Номер карты'],
-  //         category: item['Категория'],
-  //         place: item['Описание'],
-  //       }
-  //     })
-  //     data.value = dateArray
-  //     store.commit('setData', dateArray)
-  //     localStorage.setItem('data', JSON.stringify(dateArray))
-  //   }
-  //   reader.readAsBinaryString(e.files[0])
-  // }
 
 </script>
 
